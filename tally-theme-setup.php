@@ -5,10 +5,10 @@
 /*
 Plugin Name: Tally Theme Setup
 Plugin URI: http://tallythemes.com/
-Description: Page content builder for Tally Themes.
+Description: Import demo content for Tally Themes
 Version: 1.0
 Author: TallyThemes
-Author URI: http://tallythemes.com/tally-builder-pro/
+Author URI: http://tallythemes.com/
 License: GPLv2 or later
 Text Domain: tally-theme-setup
 Prefix: tallythemesetup_
