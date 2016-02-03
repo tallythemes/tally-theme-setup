@@ -1,0 +1,67 @@
+.tallythemesetup_notice{
+    padding: 25px;
+    background-color: #2BBF06;
+    color: #fff;
+    margin: 20px;
+    margin-left: 0;
+    border-radius: 5px;
+    box-shadow: 0px 0px 4px rgb(0, 0, 0);
+}
+.tallythemesetup_notice p{
+	font-size: 18px;	
+}
+.tallythemesetup_notice p a{
+	color:#000;	
+}
+.tallythemesetup_notice h2{
+    font-size: 30px;
+    margin-bottom: 10px;	
+	margin-top:0;
+	color: #fff;
+	text-shadow: 0px 0px 4px rgb(0, 0, 0);
+}
+.tallythemesetup_notice h2 strong{
+	text-decoration:underline;	
+}
+.tallythemesetup_notice .button{
+	font-size: 20px;	
+}
+
+.tallythemesetup_notice .n-dismiss{
+    font-size: 17px;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+    display: inline-block;
+    position: relative;
+    padding-left: 23px;
+    line-height: 45px;
+}
+.tallythemesetup_notice .n-dismiss:before {
+    background: 0 0;
+    color: #FFFFFF;
+    content: "\f153";
+    display: block;
+    font: 400 20px dashicons;
+    speak: none;
+    height: 30px;
+    text-align: center;
+    width: 20px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: absolute;
+    left: 0;
+    top: 14px;
+}
+
+.tallythemesetup_page{
+    background-color: #fff;
+    padding: 30px;
+    margin-top: 20px;
+    border: solid 1px #DCDADA;
+}
+
+.tallythemesetup_page p{
+	margin-top:0;	
+}
