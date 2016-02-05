@@ -1,15 +1,4 @@
 <?php
-/*
-Plugin Name: WordPress Importer
-Plugin URI: http://wordpress.org/extend/plugins/wordpress-importer/
-Description: Import posts, pages, comments, custom fields, categories, tags and more from a WordPress export file.
-Author: wordpressdotorg
-Author URI: http://wordpress.org/
-Version: 0.6.1
-Text Domain: wordpress-importer
-License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-*/
-
 if ( ! defined( 'WP_LOAD_IMPORTERS' ) )
 	return;
 
@@ -25,16 +14,7 @@ if ( ! class_exists( 'WP_Importer' ) ) {
 		require $class_wp_importer;
 }
 
-// include WXR file parsers
-if ( ! class_exists( 'WXR_Parser' ) ) {
-	require dirname( __FILE__ ) . '/parsers.php';
-}
-/**
- * WordPress Importer class for managing the import process of a WXR file
- *
- * @package WordPress
- * @subpackage Importer
- */
+
 if ( class_exists( 'WP_Importer' ) ) {
 class tallythemesetup_WP_Import extends WP_Importer {
 	var $max_wxr_version = 1.2; // max. supported WXR version
@@ -67,7 +47,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	function tallythemesetup_WP_Import() { /* nothing */ }
 
 	/**
-	 * Registered callback function for the WordPress Importer
+	 * Registered callback function
 	 *
 	 * Manages the three separate stages of the WXR import process
 	 */
@@ -132,8 +112,8 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	 */
 	function import_start( $file ) {
 		if ( ! is_file($file) ) {
-			echo '<p><strong>' . __( 'Sorry, there has been an error.', 'wordpress-importer' ) . '</strong><br />';
-			echo __( 'The file does not exist, please try again.', 'wordpress-importer' ) . '</p>';
+			echo '<p><strong>' . __( 'Sorry, there has been an error.', 'tally-theme-setup' ) . '</strong><br />';
+			echo __( 'The file does not exist, please try again.', 'tally-theme-setup' ) . '</p>';
 			$this->footer();
 			die();
 		}
@@ -141,7 +121,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 		$import_data = $this->parse( $file );
 
 		if ( is_wp_error( $import_data ) ) {
-			echo '<p><strong>' . __( 'Sorry, there has been an error.', 'wordpress-importer' ) . '</strong><br />';
+			echo '<p><strong>' . __( 'Sorry, there has been an error.', 'tally-theme-setup' ) . '</strong><br />';
 			echo esc_html( $import_data->get_error_message() ) . '</p>';
 			$this->footer();
 			die();
@@ -176,8 +156,8 @@ class tallythemesetup_WP_Import extends WP_Importer {
 		wp_defer_term_counting( false );
 		wp_defer_comment_counting( false );
 
-		echo '<p>' . __( 'All done.', 'wordpress-importer' ) . ' <a href="' . admin_url() . '">' . __( 'Have fun!', 'wordpress-importer' ) . '</a>' . '</p>';
-		echo '<p>' . __( 'Remember to update the passwords and roles of imported users.', 'wordpress-importer' ) . '</p>';
+		echo '<p>' . __( 'All done.', 'wordpress-importer' ) . ' <a href="' . admin_url() . '">' . __( 'Have fun!', 'tally-theme-setup' ) . '</a>' . '</p>';
+		echo '<p>' . __( 'Remember to update the passwords and roles of imported users.', 'tally-theme-setup' ) . '</p>';
 
 		do_action( 'import_end' );
 	}
@@ -192,12 +172,12 @@ class tallythemesetup_WP_Import extends WP_Importer {
 		$file = wp_import_handle_upload();
 
 		if ( isset( $file['error'] ) ) {
-			echo '<p><strong>' . __( 'Sorry, there has been an error.', 'wordpress-importer' ) . '</strong><br />';
+			echo '<p><strong>' . __( 'Sorry, there has been an error.', 'tally-theme-setup' ) . '</strong><br />';
 			echo esc_html( $file['error'] ) . '</p>';
 			return false;
 		} else if ( ! file_exists( $file['file'] ) ) {
-			echo '<p><strong>' . __( 'Sorry, there has been an error.', 'wordpress-importer' ) . '</strong><br />';
-			printf( __( 'The export file could not be found at <code>%s</code>. It is likely that this was caused by a permissions problem.', 'wordpress-importer' ), esc_html( $file['file'] ) );
+			echo '<p><strong>' . __( 'Sorry, there has been an error.', 'tally-theme-setup' ) . '</strong><br />';
+			printf( __( 'The export file could not be found at <code>%s</code>. It is likely that this was caused by a permissions problem.', 'tally-theme-setup' ), esc_html( $file['file'] ) );
 			echo '</p>';
 			return false;
 		}
@@ -205,7 +185,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 		$this->id = (int) $file['id'];
 		$import_data = $this->parse( $file['file'] );
 		if ( is_wp_error( $import_data ) ) {
-			echo '<p><strong>' . __( 'Sorry, there has been an error.', 'wordpress-importer' ) . '</strong><br />';
+			echo '<p><strong>' . __( 'Sorry, there has been an error.', 'tally-theme-setup' ) . '</strong><br />';
 			echo esc_html( $import_data->get_error_message() ) . '</p>';
 			return false;
 		}
@@ -213,7 +193,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 		$this->version = $import_data['version'];
 		if ( $this->version > $this->max_wxr_version ) {
 			echo '<div class="error"><p><strong>';
-			printf( __( 'This WXR file (version %s) may not be supported by this version of the importer. Please consider updating.', 'wordpress-importer' ), esc_html($import_data['version']) );
+			printf( __( 'This WXR file (version %s) may not be supported by this version of the importer. Please consider updating.', 'tally-theme-setup' ), esc_html($import_data['version']) );
 			echo '</strong></p></div>';
 		}
 
@@ -238,7 +218,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 			foreach ( $import_data['posts'] as $post ) {
 				$login = sanitize_user( $post['post_author'], true );
 				if ( empty( $login ) ) {
-					printf( __( 'Failed to import author %s. Their posts will be attributed to the current user.', 'wordpress-importer' ), esc_html( $post['post_author'] ) );
+					printf( __( 'Failed to import author %s. Their posts will be attributed to the current user.', 'tally-theme-setup' ), esc_html( $post['post_author'] ) );
 					echo '<br />';
 					continue;
 				}
@@ -265,9 +245,9 @@ class tallythemesetup_WP_Import extends WP_Importer {
 
 <?php if ( ! empty( $this->authors ) ) : ?>
 	<h3><?php _e( 'Assign Authors', 'wordpress-importer' ); ?></h3>
-	<p><?php _e( 'To make it easier for you to edit and save the imported content, you may want to reassign the author of the imported item to an existing user of this site. For example, you may want to import all the entries as <code>admin</code>s entries.', 'wordpress-importer' ); ?></p>
+	<p><?php _e( 'To make it easier for you to edit and save the imported content, you may want to reassign the author of the imported item to an existing user of this site. For example, you may want to import all the entries as <code>admin</code>s entries.', 'tally-theme-setup' ); ?></p>
 <?php if ( $this->allow_create_users() ) : ?>
-	<p><?php printf( __( 'If a new user is created by WordPress, a new password will be randomly generated and the new user&#8217;s role will be set as %s. Manually changing the new user&#8217;s details will be necessary.', 'wordpress-importer' ), esc_html( get_option('default_role') ) ); ?></p>
+	<p><?php printf( __( 'If a new user is created by WordPress, a new password will be randomly generated and the new user&#8217;s role will be set as %s. Manually changing the new user&#8217;s details will be necessary.', 'tally-theme-setup' ), esc_html( get_option('default_role') ) ); ?></p>
 <?php endif; ?>
 	<ol id="authors">
 <?php foreach ( $this->authors as $author ) : ?>
@@ -280,11 +260,11 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	<h3><?php _e( 'Import Attachments', 'wordpress-importer' ); ?></h3>
 	<p>
 		<input type="checkbox" value="1" name="fetch_attachments" id="import-attachments" />
-		<label for="import-attachments"><?php _e( 'Download and import file attachments', 'wordpress-importer' ); ?></label>
+		<label for="import-attachments"><?php _e( 'Download and import file attachments', 'tally-theme-setup' ); ?></label>
 	</p>
 <?php endif; ?>
 
-	<p class="submit"><input type="submit" class="button" value="<?php esc_attr_e( 'Submit', 'wordpress-importer' ); ?>" /></p>
+	<p class="submit"><input type="submit" class="button" value="<?php esc_attr_e( 'Submit', 'tally-theme-setup' ); ?>" /></p>
 </form>
 <?php
 	}
@@ -308,7 +288,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 		$create_users = $this->allow_create_users();
 		if ( $create_users ) {
 			if ( $this->version != '1.0' ) {
-				_e( 'or create new user with login name:', 'wordpress-importer' );
+				_e( 'or create new user with login name:', 'tally-theme-setup' );
 				$value = '';
 			} else {
 				_e( 'as a new user:', 'wordpress-importer' );
@@ -322,7 +302,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 			_e( 'assign posts to an existing user:', 'wordpress-importer' );
 		else
 			_e( 'or assign posts to an existing user:', 'wordpress-importer' );
-		wp_dropdown_users( array( 'name' => "user_map[$n]", 'multi' => true, 'show_option_all' => __( '- Select -', 'wordpress-importer' ) ) );
+		wp_dropdown_users( array( 'name' => "user_map[$n]", 'multi' => true, 'show_option_all' => __( '- Select -', 'tally-theme-setup' ) ) );
 		echo '<input type="hidden" name="imported_authors['.$n.']" value="' . esc_attr( $author['author_login'] ) . '" />';
 
 		if ( $this->version != '1.0' )
@@ -372,7 +352,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 						$this->processed_authors[$old_id] = $user_id;
 					$this->author_mapping[$santized_old_login] = $user_id;
 				} else {
-					printf( __( 'Failed to create new user for %s. Their posts will be attributed to the current user.', 'wordpress-importer' ), esc_html($this->authors[$old_login]['author_display_name']) );
+					printf( __( 'Failed to create new user for %s. Their posts will be attributed to the current user.', 'tally-theme-setup' ), esc_html($this->authors[$old_login]['author_display_name']) );
 					if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 						echo ' ' . $user_id->get_error_message();
 					echo '<br />';
@@ -423,7 +403,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 				if ( isset($cat['term_id']) )
 					$this->processed_terms[intval($cat['term_id'])] = $id;
 			} else {
-				printf( __( 'Failed to import category %s', 'wordpress-importer' ), esc_html($cat['category_nicename']) );
+				printf( __( 'Failed to import category %s', 'tally-theme-setup' ), esc_html($cat['category_nicename']) );
 				if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 					echo ': ' . $id->get_error_message();
 				echo '<br />';
@@ -463,7 +443,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 				if ( isset($tag['term_id']) )
 					$this->processed_terms[intval($tag['term_id'])] = $id['term_id'];
 			} else {
-				printf( __( 'Failed to import post tag %s', 'wordpress-importer' ), esc_html($tag['tag_name']) );
+				printf( __( 'Failed to import post tag %s', 'tally-theme-setup' ), esc_html($tag['tag_name']) );
 				if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 					echo ': ' . $id->get_error_message();
 				echo '<br />';
@@ -535,7 +515,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 			$post = apply_filters( 'wp_import_post_data_raw', $post );
 
 			if ( ! post_type_exists( $post['post_type'] ) ) {
-				printf( __( 'Failed to import &#8220;%s&#8221;: Invalid post type %s', 'wordpress-importer' ),
+				printf( __( 'Failed to import &#8220;%s&#8221;: Invalid post type %s', 'tally-theme-setup' ),
 					esc_html($post['post_title']), esc_html($post['post_type']) );
 				echo '<br />';
 				do_action( 'wp_import_post_exists', $post );
@@ -557,7 +537,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 
 			$post_exists = post_exists( $post['post_title'], '', $post['post_date'] );
 			if ( $post_exists && get_post_type( $post_exists ) == $post['post_type'] ) {
-				printf( __('%s &#8220;%s&#8221; already exists.', 'wordpress-importer'), $post_type_object->labels->singular_name, esc_html($post['post_title']) );
+				printf( __('%s &#8220;%s&#8221; already exists.', 'tally-theme-setup'), $post_type_object->labels->singular_name, esc_html($post['post_title']) );
 				echo '<br />';
 				$comment_post_ID = $post_id = $post_exists;
 			} else {
@@ -616,7 +596,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 				}
 
 				if ( is_wp_error( $post_id ) ) {
-					printf( __( 'Failed to import %s &#8220;%s&#8221;', 'wordpress-importer' ),
+					printf( __( 'Failed to import %s &#8220;%s&#8221;', 'tally-theme-setup' ),
 						$post_type_object->labels->singular_name, esc_html($post['post_title']) );
 					if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 						echo ': ' . $post_id->get_error_message();
@@ -650,7 +630,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 							$term_id = $t['term_id'];
 							do_action( 'wp_import_insert_term', $t, $term, $post_id, $post );
 						} else {
-							printf( __( 'Failed to import %s %s', 'wordpress-importer' ), esc_html($taxonomy), esc_html($term['name']) );
+							printf( __( 'Failed to import %s %s', 'tally-theme-setup' ), esc_html($taxonomy), esc_html($term['name']) );
 							if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 								echo ': ' . $t->get_error_message();
 							echo '<br />';
@@ -781,14 +761,14 @@ class tallythemesetup_WP_Import extends WP_Importer {
 
 		// no nav_menu term associated with this menu item
 		if ( ! $menu_slug ) {
-			_e( 'Menu item skipped due to missing menu slug', 'wordpress-importer' );
+			_e( 'Menu item skipped due to missing menu slug', 'tally-theme-setup' );
 			echo '<br />';
 			return;
 		}
 
 		$menu_id = term_exists( $menu_slug, 'nav_menu' );
 		if ( ! $menu_id ) {
-			printf( __( 'Menu item skipped due to invalid menu slug: %s', 'wordpress-importer' ), esc_html( $menu_slug ) );
+			printf( __( 'Menu item skipped due to invalid menu slug: %s', 'tally-theme-setup' ), esc_html( $menu_slug ) );
 			echo '<br />';
 			return;
 		} else {
@@ -851,7 +831,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	function process_attachment( $post, $url ) {
 		if ( ! $this->fetch_attachments )
 			return new WP_Error( 'attachment_processing_error',
-				__( 'Fetching attachments is not enabled', 'wordpress-importer' ) );
+				__( 'Fetching attachments is not enabled', 'tally-theme-setup' ) );
 
 		// if the URL is absolute, but does not contain address, then upload it assuming base_site_url
 		if ( preg_match( '|^/[\w\W]+$|', $url ) )
@@ -864,7 +844,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 		if ( $info = wp_check_filetype( $upload['file'] ) )
 			$post['post_mime_type'] = $info['type'];
 		else
-			return new WP_Error( 'attachment_processing_error', __('Invalid file type', 'wordpress-importer') );
+			return new WP_Error( 'attachment_processing_error', __('Invalid file type', 'tally-theme-setup') );
 
 		$post['guid'] = $upload['url'];
 
@@ -908,31 +888,31 @@ class tallythemesetup_WP_Import extends WP_Importer {
 		// request failed
 		if ( ! $headers ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', __('Remote server did not respond', 'wordpress-importer') );
+			return new WP_Error( 'import_file_error', __('Remote server did not respond', 'tally-theme-setup') );
 		}
 
 		// make sure the fetch was successful
 		if ( $headers['response'] != '200' ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', sprintf( __('Remote server returned error response %1$d %2$s', 'wordpress-importer'), esc_html($headers['response']), get_status_header_desc($headers['response']) ) );
+			return new WP_Error( 'import_file_error', sprintf( __('Remote server returned error response %1$d %2$s', 'tally-theme-setup'), esc_html($headers['response']), get_status_header_desc($headers['response']) ) );
 		}
 
 		$filesize = filesize( $upload['file'] );
 
 		if ( isset( $headers['content-length'] ) && $filesize != $headers['content-length'] ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', __('Remote file is incorrect size', 'wordpress-importer') );
+			return new WP_Error( 'import_file_error', __('Remote file is incorrect size', 'tally-theme-setup') );
 		}
 
 		if ( 0 == $filesize ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', __('Zero size file downloaded', 'wordpress-importer') );
+			return new WP_Error( 'import_file_error', __('Zero size file downloaded', 'tally-theme-setup') );
 		}
 
 		$max_size = (int) $this->max_attachment_size();
 		if ( ! empty( $max_size ) && $filesize > $max_size ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', sprintf(__('Remote file is too large, limit is %s', 'wordpress-importer'), size_format($max_size) ) );
+			return new WP_Error( 'import_file_error', sprintf(__('Remote file is too large, limit is %s', 'tally-theme-setup'), size_format($max_size) ) );
 		}
 
 		// keep track of the old and new urls so we can substitute them later
@@ -1023,7 +1003,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	 * @return array Information gathered from the WXR file
 	 */
 	function parse( $file ) {
-		$parser = new WXR_Parser();
+		$parser = new tallythemesetup_WXR_Parser();
 		return $parser->parse( $file );
 	}
 
@@ -1038,7 +1018,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 		if ( isset( $updates[$basename] ) ) {
 			$update = $updates[$basename];
 			echo '<div class="error"><p><strong>';
-			printf( __( 'A new version of this importer is available. Please update to version %s to ensure compatibility with newer export files.', 'wordpress-importer' ), $update->update->new_version );
+			printf( __( 'A new version of this importer is available. Please update to version %s to ensure compatibility with newer export files.', 'tally-theme-setup' ), $update->update->new_version );
 			echo '</strong></p></div>';
 		}
 	}
@@ -1054,7 +1034,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	function greet() {
 		echo '<div class="narrow">';
 		echo '<p>'.__( 'Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import the posts, pages, comments, custom fields, categories, and tags into this site.', 'wordpress-importer' ).'</p>';
-		echo '<p>'.__( 'Choose a WXR (.xml) file to upload, then click Upload file and import.', 'wordpress-importer' ).'</p>';
+		echo '<p>'.__( 'Choose a WXR (.xml) file to upload, then click Upload file and import.', 'tally-theme-setup' ).'</p>';
 		wp_import_upload_form( 'admin.php?import=wordpress&amp;step=1' );
 		echo '</div>';
 	}
@@ -1118,4 +1098,17 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	}
 }
 
-} // class_exists( 'WP_Importer' )
+} // End of main class
+
+
+class tallythemesetup_import extends tallythemesetup_WP_Import
+{
+    function check(){
+    //you can add any extra custom functions after the importing of demo coment is done
+	return true;
+    }
+	
+	function mp_request_timeout(){
+		return 120;	
+	}
+}

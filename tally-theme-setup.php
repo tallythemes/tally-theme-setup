@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA..
 */
 
 // Make sure we don't expose any info if called directly
+
 if ( !function_exists( 'add_action' ) ) {
 	echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
 	exit;
@@ -42,8 +43,8 @@ define( 'TALLYTHEMESETUP__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'TALLYTHEMESETUP__PLUGIN_DRI', plugin_dir_path( __FILE__ ) );
 define( 'TALLYTHEMESETUP__DEBUG', true );
 
-require_once('script-loader.php');
-require_once('notice.php');
+include('inc/script-loader.php');
+include('inc/notice.php');
 
 
 add_action( 'wp_ajax_tallythemesetup_demo_import', 'tallythemesetup_demo_import' );
@@ -53,12 +54,12 @@ function tallythemesetup_demo_import(){
 		1. XML importer
 	------------------------------------------------------------------*/
 	if($_REQUEST['target'] == 'xml_import'):
-		if ( !defined('WP_LOAD_IMPORTERS') ) define('WP_LOAD_IMPORTERS', true);
-	
-		// Load Importer API
-		require_once ('inc/wordpress-importer.php');	
-	
-		if ( class_exists( 'WP_Importer' ) ){ 
+		if ( !defined('WP_LOAD_IMPORTERS') ) define('WP_LOAD_IMPORTERS', true);		
+		
+		include('inc/WXR-parsers.php');
+		include('inc/import-xml.php');
+
+		if ( class_exists('tallythemesetup_import') ){ 
 			
 			if(file_exists(get_stylesheet_directory() ."/inc/demo/content.xml")){
 				$import_filepath = get_stylesheet_directory() ."/inc/demo/content.xml";
@@ -67,18 +68,17 @@ function tallythemesetup_demo_import(){
 			}
 			
 			if(file_exists($import_filepath)){
-				include_once('bootstrapguru-import.php');
-	
-				$wp_import = new tallythemesetup_import();
-				$wp_import->fetch_attachments = false;
+					
+				$WP_Import = new tallythemesetup_import();
+				$WP_Import->fetch_attachments = false;
 				
 				set_time_limit(0);
 				ob_start();
-				$wp_import->import($import_filepath);
+				$WP_Import->import($import_filepath);
 				$log = ob_get_contents();
 						ob_end_clean();
 		
-				if($wp_import->check()){
+				if($WP_Import->check()){
 					echo 'Sample contents are imported.';
 					update_option('tallythemesetup_is_xml', 'yes');
 				}
@@ -86,7 +86,6 @@ function tallythemesetup_demo_import(){
 				echo 'No XML file found in the theme.';	
 				echo $import_filepath;
 			}
-	
 		}else{
 			echo 'Please install "wordpress-importer" plugin';	
 		}
@@ -97,11 +96,11 @@ function tallythemesetup_demo_import(){
 		2. Widget importer
 	------------------------------------------------------------------*/
 	if($_REQUEST['target'] == 'widget_import'):
-		if ( !function_exists( 'tallythemesetup_import_widget_data' ) ){ 
-			require_once ('inc/widgets-importer.php');	
+		if ( !function_exists( 'tallythemesetup_process_widget_data' ) ){ 
+			require_once 'inc/import-widgets-wie.php';
 		}
 		
-		if(function_exists( 'tallythemesetup_import_widget_data' )){
+		if(function_exists( 'tallythemesetup_process_widget_data' )){
 			if(file_exists(get_stylesheet_directory() ."/inc/demo/widgets.wie")){
 				$wie_filepath = get_stylesheet_directory() ."/inc/demo/widgets.wie";
 			}else{
@@ -109,7 +108,7 @@ function tallythemesetup_demo_import(){
 			}
 			
 			if(file_exists($wie_filepath)){
-				if(tallythemesetup_process_import_widget_file( $wie_filepath )){
+				if(tallythemesetup_process_widget_data( $wie_filepath )){
 					echo 'Sample Widgets are imported.';
 					update_option('tallythemesetup_is_widget', 'yes');
 				}
