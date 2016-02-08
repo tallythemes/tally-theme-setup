@@ -1,4 +1,11 @@
 <?php
+/**
+ * Import XML file
+ *
+ * Original code from {@link https://wordpress.org/plugins/wordpress-importer/ WordPress Importer}
+ *
+ */
+ 
 if ( ! defined( 'WP_LOAD_IMPORTERS' ) )
 	return;
 
@@ -156,7 +163,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 		wp_defer_term_counting( false );
 		wp_defer_comment_counting( false );
 
-		echo '<p>' . __( 'All done.', 'wordpress-importer' ) . ' <a href="' . admin_url() . '">' . __( 'Have fun!', 'tally-theme-setup' ) . '</a>' . '</p>';
+		echo '<p>' . __( 'All done.', 'tally-theme-setup' ) . ' <a href="' . admin_url() . '">' . __( 'Have fun!', 'tally-theme-setup' ) . '</a>' . '</p>';
 		echo '<p>' . __( 'Remember to update the passwords and roles of imported users.', 'tally-theme-setup' ) . '</p>';
 
 		do_action( 'import_end' );
@@ -244,7 +251,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	<input type="hidden" name="import_id" value="<?php echo $this->id; ?>" />
 
 <?php if ( ! empty( $this->authors ) ) : ?>
-	<h3><?php _e( 'Assign Authors', 'wordpress-importer' ); ?></h3>
+	<h3><?php _e( 'Assign Authors', 'tally-theme-setup' ); ?></h3>
 	<p><?php _e( 'To make it easier for you to edit and save the imported content, you may want to reassign the author of the imported item to an existing user of this site. For example, you may want to import all the entries as <code>admin</code>s entries.', 'tally-theme-setup' ); ?></p>
 <?php if ( $this->allow_create_users() ) : ?>
 	<p><?php printf( __( 'If a new user is created by WordPress, a new password will be randomly generated and the new user&#8217;s role will be set as %s. Manually changing the new user&#8217;s details will be necessary.', 'tally-theme-setup' ), esc_html( get_option('default_role') ) ); ?></p>
@@ -257,7 +264,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 <?php endif; ?>
 
 <?php if ( $this->allow_fetch_attachments() ) : ?>
-	<h3><?php _e( 'Import Attachments', 'wordpress-importer' ); ?></h3>
+	<h3><?php _e( 'Import Attachments', 'tally-theme-setup' ); ?></h3>
 	<p>
 		<input type="checkbox" value="1" name="fetch_attachments" id="import-attachments" />
 		<label for="import-attachments"><?php _e( 'Download and import file attachments', 'tally-theme-setup' ); ?></label>
@@ -277,7 +284,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	 * @param array $author Author information, e.g. login, display name, email
 	 */
 	function author_select( $n, $author ) {
-		_e( 'Import author:', 'wordpress-importer' );
+		_e( 'Import author:', 'tally-theme-setup' );
 		echo ' <strong>' . esc_html( $author['author_display_name'] );
 		if ( $this->version != '1.0' ) echo ' (' . esc_html( $author['author_login'] ) . ')';
 		echo '</strong><br />';
@@ -291,7 +298,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 				_e( 'or create new user with login name:', 'tally-theme-setup' );
 				$value = '';
 			} else {
-				_e( 'as a new user:', 'wordpress-importer' );
+				_e( 'as a new user:', 'tally-theme-setup' );
 				$value = esc_attr( sanitize_user( $author['author_login'], true ) );
 			}
 
@@ -299,9 +306,9 @@ class tallythemesetup_WP_Import extends WP_Importer {
 		}
 
 		if ( ! $create_users && $this->version == '1.0' )
-			_e( 'assign posts to an existing user:', 'wordpress-importer' );
+			_e( 'assign posts to an existing user:', 'tally-theme-setup' );
 		else
-			_e( 'or assign posts to an existing user:', 'wordpress-importer' );
+			_e( 'or assign posts to an existing user:', 'tally-theme-setup' );
 		wp_dropdown_users( array( 'name' => "user_map[$n]", 'multi' => true, 'show_option_all' => __( '- Select -', 'tally-theme-setup' ) ) );
 		echo '<input type="hidden" name="imported_authors['.$n.']" value="' . esc_attr( $author['author_login'] ) . '" />';
 
@@ -489,7 +496,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 				if ( isset($term['term_id']) )
 					$this->processed_terms[intval($term['term_id'])] = $id['term_id'];
 			} else {
-				printf( __( 'Failed to import %s %s', 'wordpress-importer' ), esc_html($term['term_taxonomy']), esc_html($term['term_name']) );
+				printf( __( 'Failed to import %s %s', 'tally-theme-setup' ), esc_html($term['term_taxonomy']), esc_html($term['term_name']) );
 				if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 					echo ': ' . $id->get_error_message();
 				echo '<br />';
@@ -1011,7 +1018,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	function header() {
 		echo '<div class="wrap">';
 		screen_icon();
-		echo '<h2>' . __( 'Import WordPress', 'wordpress-importer' ) . '</h2>';
+		echo '<h2>' . __( 'Import WordPress', 'tally-theme-setup' ) . '</h2>';
 
 		$updates = get_plugin_updates();
 		$basename = plugin_basename(__FILE__);
@@ -1033,7 +1040,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	 */
 	function greet() {
 		echo '<div class="narrow">';
-		echo '<p>'.__( 'Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import the posts, pages, comments, custom fields, categories, and tags into this site.', 'wordpress-importer' ).'</p>';
+		echo '<p>'.__( 'Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import the posts, pages, comments, custom fields, categories, and tags into this site.', 'tally-theme-setup' ).'</p>';
 		echo '<p>'.__( 'Choose a WXR (.xml) file to upload, then click Upload file and import.', 'tally-theme-setup' ).'</p>';
 		wp_import_upload_form( 'admin.php?import=wordpress&amp;step=1' );
 		echo '</div>';

@@ -1,5 +1,13 @@
 <?php
 /**
+ *  Import widget JSON data
+ *
+ * Original code from {@link https://wordpress.org/plugins/widget-importer-exporter/ Widget Importer & Exporter}
+ *
+ */
+ 
+ 
+/**
  * Import widget JSON data
  *
  * @global array $wp_registered_sidebars

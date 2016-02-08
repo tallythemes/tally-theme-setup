@@ -13,6 +13,8 @@ Import demo content for Tally Themes
 
 Want to make our theme look like our theme demo. This plugin will help you to make your site look like the original theme demo easily.
 
+We have used some souce code of [WorddPress Impoter](https://wordpress.org/plugins/wordpress-importer/) and [Widget Importer & Exporter](https://wordpress.org/plugins/wordpress-importer/)
+
 == Installation ==
 
 1. Upload the plugin to your WordPress site in the `/wp-content/plugins` folder or install via the WordPress admin.

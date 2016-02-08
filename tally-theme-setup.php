@@ -86,8 +86,6 @@ function tallythemesetup_demo_import(){
 				echo 'No XML file found in the theme.';	
 				echo $import_filepath;
 			}
-		}else{
-			echo 'Please install "wordpress-importer" plugin';	
 		}
 	endif;
 	
