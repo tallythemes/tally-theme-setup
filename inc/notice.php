@@ -4,6 +4,7 @@ function tallythemesetup_admin_notice() {
 	global $current_user;
 	$user_id = $current_user->ID;
 	$theme = wp_get_theme();
+	$theme_demo_url = (defined('TALLYTHEME_DEMO_URL') ? TALLYTHEME_DEMO_URL : '');
 	
 	$plugins_lists = apply_filters('tallythemesetup_plugin_list', '');
 	$installed_plugin_count = 0;
@@ -55,11 +56,11 @@ function tallythemesetup_admin_notice() {
                 	<p>Now you are in the Sample Data Impoter page. Please click on <strong>Import Sample Data</strong> button to make your site look like the theme demo.</p>
                 <?php else: ?>
                 	<p>You are away of one simple step to make your site look like the Theme 
-                    <a href="#">Demo</a> Please click on the button below and it will take you to the Demo Impoter page</p>
+                    <a href="<?php echo $theme_demo_url; ?>" target="_blank">Demo</a> Please click on the button below and it will take you to the Demo Impoter page</p>
                     <a class="button button-primary button-hero" href="<?php echo admin_url('themes.php?page=tallythemesetup-demo-importer'); ?>">Take me to the Impoter Page</a> 
                 <?php endif; ?>
             <?php else: ?>  
-            	<p>If you want to make the site look like the <a href="#">Demo</a> of the theme please follow the simple 2 steps below.</p>
+            	<p>If you want to make the site look like the <a href="<?php echo $theme_demo_url; ?>" target="_blank">Demo</a> of the theme please follow the simple 2 steps below.</p>
                 <ol>
                 	<li>Install Recommended Plugins</li>
                     <li>Import Sample Data</li>

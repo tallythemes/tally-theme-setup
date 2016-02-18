@@ -6,7 +6,7 @@
 Plugin Name: Tally Theme Setup
 Plugin URI: http://tallythemes.com/
 Description: Import demo content for Tally Themes
-Version: 1.0
+Version: 1.1
 Author: TallyThemes
 Author URI: http://tallythemes.com/
 License: GPLv2 or later
@@ -37,11 +37,8 @@ if ( !function_exists( 'add_action' ) ) {
 	exit;
 }
 
-define( 'TALLYTHEMESETUP__VERSION', '1.0' );
-define( 'TALLYTHEMESETUP__MINIMUM_WP_VERSION', '4.0' );
 define( 'TALLYTHEMESETUP__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'TALLYTHEMESETUP__PLUGIN_DRI', plugin_dir_path( __FILE__ ) );
-define( 'TALLYTHEMESETUP__DEBUG', true );
 
 include('inc/script-loader.php');
 include('inc/notice.php');
