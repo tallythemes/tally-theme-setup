@@ -6,7 +6,7 @@
 Plugin Name: Tally Theme Setup
 Plugin URI: http://tallythemes.com/
 Description: Import demo content for Tally Themes
-Version: 1.3
+Version: 1.4
 Author: TallyThemes
 Author URI: http://tallythemes.com/
 License: GPLv2 or later
@@ -46,11 +46,18 @@ include('inc/notice.php');
 
 add_action( 'wp_ajax_tallythemesetup_demo_import', 'tallythemesetup_demo_import' );
 function tallythemesetup_demo_import(){
+	
+	$disable_xml_import = apply_filters('tallythemesetup_disable_xml_import', false);
+	$disable_wie_import = apply_filters('tallythemesetup_disable_wie_import', false);
+	$disable_menu_setup = apply_filters('tallythemesetup_disable_menu_setup', false);
+	$disable_home_setup = apply_filters('tallythemesetup_disable_home_setup', false);
+	$disable_blog_setup = apply_filters('tallythemesetup_disable_blog_setup', false);
+	$disable_builder_import = apply_filters('tallythemesetup_disable_builder_import', false);
 
  	/*
 		1. XML importer
 	------------------------------------------------------------------*/
-	if($_REQUEST['target'] == 'xml_import'):
+	if(($_REQUEST['target'] == 'xml_import') && ($disable_xml_import == false)){
 		if ( !defined('WP_LOAD_IMPORTERS') ) define('WP_LOAD_IMPORTERS', true);		
 		
 		include('inc/WXR-parsers.php');
@@ -93,13 +100,16 @@ function tallythemesetup_demo_import(){
 				echo $import_filepath;
 			}
 		}
-	endif;
+	}elseif(($_REQUEST['target'] == 'xml_import') && ($disable_xml_import == true)){
+		update_option('tallythemesetup_is_xml', 'yes');
+	}
+	
 	
 	
 	/*
 		2. Widget importer
 	------------------------------------------------------------------*/
-	if($_REQUEST['target'] == 'widget_import'):
+	if(($_REQUEST['target'] == 'widget_import') && ($disable_wie_import == false)){
 		if ( !function_exists( 'tallythemesetup_process_widget_data' ) ){ 
 			require_once 'inc/import-widgets-wie.php';
 		}
@@ -130,7 +140,9 @@ function tallythemesetup_demo_import(){
 				echo 'No widgets.wie file found in the theme';	
 			}
 		}
-	endif;
+	}elseif(($_REQUEST['target'] == 'widget_import') && ($disable_wie_import == true)){
+		update_option('tallythemesetup_is_widget', 'yes');
+	}
 	
 	
 	/*
@@ -141,15 +153,14 @@ function tallythemesetup_demo_import(){
 		$home_blog_data = get_page_by_title( apply_filters('tallythemesetup_blog_title', 'Blog') );
 		$text_content = '';
 		if($home_page_data){
-			if(update_option( 'page_on_front', $home_page_data->ID )){
+			if((update_option( 'page_on_front', $home_page_data->ID) && ( $disable_home_setup == false ) )){
 				update_option( 'show_on_front', 'page' );
 				$text_content .= 'Set home page as Front page. <br>';
 				update_option('tallythemesetup_is_home', 'yes');
-				
 			}
 		}
 		if($home_blog_data){
-			if(update_option( 'page_for_posts', $home_blog_data->ID )){
+			if((update_option( 'page_for_posts', $home_blog_data->ID) ) && ( $disable_blog_setup == false )){
 				$text_content .=  '<br>Set Blog page as Post page.';
 				update_option('tallythemesetup_is_blog', 'yes');
 			}
@@ -157,11 +168,18 @@ function tallythemesetup_demo_import(){
 		echo $text_content;
 	endif;
 	
+	if($disable_home_setup == true){
+		update_option('tallythemesetup_is_home', 'yes');
+	}
+	if($disable_blog_setup == true){
+		update_option('tallythemesetup_is_blog', 'yes');
+	}
+	
 	
 	/*
 		4. Setup the menu
 	------------------------------------------------------------------*/
-	if($_REQUEST['target'] == 'setup_menu'):
+	if(($_REQUEST['target'] == 'setup_menu') && ($disable_menu_setup == false)){
 		$menu_term_id = '';
 		$get_all_menu = get_terms( 'nav_menu', array( 'hide_empty' => true ) );
 		if(!empty($get_all_menu) && ! is_wp_error( $get_all_menu )){
@@ -178,12 +196,14 @@ function tallythemesetup_demo_import(){
 			echo 'Set primary menu as site menu.';
 			update_option('tallythemesetup_is_menu', 'yes');
 		}
-	endif;
+	}elseif(($_REQUEST['target'] == 'setup_menu') && ($disable_menu_setup == true)){
+		update_option('tallythemesetup_is_menu', 'yes');
+	}
 	
 	/*
 		5. Import Builder pages
 	------------------------------------------------------------------*/
-	if($_REQUEST['target'] == 'builder_import'):
+	if(($_REQUEST['target'] == 'builder_import') && ($disable_builder_import == false)){
 		if(function_exists('tallybuilder_import_page_from_array')){
 			$pages_list = apply_filters('tallybuilder_prebuild_pages', NULL);
 			if(is_array($pages_list)){
@@ -199,7 +219,9 @@ function tallythemesetup_demo_import(){
 		}else{
 			echo '<strong>Could not import builder content.</strong> Please Install the Builder Plugin';	
 		}
-	endif;
+	}elseif(($_REQUEST['target'] == 'builder_import') && ($disable_builder_import == true)){
+		update_option('tallythemesetup_is_builder', 'yes');
+	}
 	
 	if($_REQUEST['target'] == 'update_option'):
 		echo '<p style="font-size:18px; color:#0A9900;">All Done</p>';
