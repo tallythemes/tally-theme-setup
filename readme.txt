@@ -3,7 +3,7 @@ Contributors: tallythemes, sazzadh
 Tags: tallythemes, impoter, dample data, sample data impoter
 Requires at least: 4.4
 Tested up to: 4.4
-Stable tag: 1.1
+Stable tag: 1.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -38,6 +38,10 @@ It is not recommended for live site. It is recommended on a fresh wordpress inst
 
 
 == Changelog ==
+
+= 1.2 =
+- Enable attachment import
+
 = 1.1 =
 - Fixed a small Issue
 - Remove unused code

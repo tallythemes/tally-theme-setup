@@ -6,7 +6,7 @@
 Plugin Name: Tally Theme Setup
 Plugin URI: http://tallythemes.com/
 Description: Import demo content for Tally Themes
-Version: 1.1
+Version: 1.2
 Author: TallyThemes
 Author URI: http://tallythemes.com/
 License: GPLv2 or later
@@ -58,16 +58,25 @@ function tallythemesetup_demo_import(){
 
 		if ( class_exists('tallythemesetup_import') ){ 
 			
-			if(file_exists(get_stylesheet_directory() ."/inc/demo/content.xml")){
-				$import_filepath = get_stylesheet_directory() ."/inc/demo/content.xml";
+			$content_xml_child = get_stylesheet_directory() ."/inc/demo/content.xml";
+			$content_xml_theme = get_template_directory() ."/inc/demo/content.xml";
+			$content_alt_xml_child = get_stylesheet_directory() ."/inc/demo/content-alt.xml";
+			$content_alt_xml_theme = get_template_directory() ."/inc/demo/content-alt.xml";
+			
+			if(file_exists($content_xml_child)){
+				$import_filepath = $content_xml_child;
+			}elseif(file_exists($content_xml_theme)){
+				$import_filepath = $content_xml_theme;
+			}elseif(file_exists($content_alt_xml_child)){
+				$import_filepath = $content_alt_xml_child;
 			}else{
-				$import_filepath = get_template_directory() ."/inc/demo/content.xml";
+				$import_filepath = $content_alt_xml_theme;
 			}
 			
 			if(file_exists($import_filepath)){
 					
 				$WP_Import = new tallythemesetup_import();
-				$WP_Import->fetch_attachments = false;
+				$WP_Import->fetch_attachments = true;
 				
 				set_time_limit(0);
 				ob_start();
