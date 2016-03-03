@@ -105,10 +105,20 @@ function tallythemesetup_demo_import(){
 		}
 		
 		if(function_exists( 'tallythemesetup_process_widget_data' )){
-			if(file_exists(get_stylesheet_directory() ."/inc/demo/widgets.wie")){
-				$wie_filepath = get_stylesheet_directory() ."/inc/demo/widgets.wie";
+			
+			$widget_file_child = get_stylesheet_directory() ."/inc/demo/widgets.wie";
+			$widget_file_theme = get_template_directory() ."/inc/demo/widgets.wie";
+			$widget_alt_file_child = get_stylesheet_directory() ."/inc/demo/widgets-alt.wie";
+			$widget_alt_file_theme = get_template_directory() ."/inc/demo/widgets-alt.wie";
+			
+			if(file_exists($widget_file_child)){
+				$wie_filepath = $widget_file_child;
+			}elseif(file_exists($widget_file_theme)){
+				$wie_filepath = $widget_file_theme;
+			}elseif(file_exists($widget_alt_file_child)){
+				$wie_filepath = $widget_alt_file_child;
 			}else{
-				$wie_filepath = get_template_directory() ."/inc/demo/widgets.wie";
+				$wie_filepath = $widget_alt_file_theme;
 			}
 			
 			if(file_exists($wie_filepath)){
