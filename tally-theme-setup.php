@@ -40,6 +40,17 @@ if ( !function_exists( 'add_action' ) ) {
 define( 'TALLYTHEMESETUP__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'TALLYTHEMESETUP__PLUGIN_DRI', plugin_dir_path( __FILE__ ) );
 
+$theme_data = wp_get_theme();
+
+define( 'TALLYTHEMESETUP_IS_XML', 'tallythemesetup_is_xml_'.$theme_data->get('Template ') );
+define( 'TALLYTHEMESETUP_IS_WIDGET', 'tallythemesetup_is_widget_'.$theme_data->get('Template ') );
+define( 'TALLYTHEMESETUP_IS_MENU', 'tallythemesetup_is_menu_'.$theme_data->get('Template ') );
+define( 'TALLYTHEMESETUP_IS_HOME', 'tallythemesetup_is_home_'.$theme_data->get('Template ') );
+define( 'TALLYTHEMESETUP_IS_BLOG', 'tallythemesetup_is_blog_'.$theme_data->get('Template ') );
+define( 'TALLYTHEMESETUP_IS_BUILDER', 'tallythemesetup_is_builder_'.$theme_data->get('Template ') );
+
+define( 'TALLYTHEMESETUP_IGNOR_NOTICE', 'tallythemesetup_ignore_notice_'.$theme_data->get('Template ') );
+
 include('inc/script-loader.php');
 include('inc/notice.php');
 
@@ -93,7 +104,7 @@ function tallythemesetup_demo_import(){
 		
 				if($WP_Import->check()){
 					echo 'Sample contents are imported.';
-					update_option('tallythemesetup_is_xml', 'yes');
+					update_option(TALLYTHEMESETUP_IS_XML, 'yes');
 				}
 			}else{
 				echo 'No XML file found in the theme.';	
@@ -101,7 +112,7 @@ function tallythemesetup_demo_import(){
 			}
 		}
 	}elseif(($_REQUEST['target'] == 'xml_import') && ($disable_xml_import == true)){
-		update_option('tallythemesetup_is_xml', 'yes');
+		update_option(TALLYTHEMESETUP_IS_XML, 'yes');
 	}
 	
 	
@@ -134,14 +145,14 @@ function tallythemesetup_demo_import(){
 			if(file_exists($wie_filepath)){
 				if(tallythemesetup_process_widget_data( $wie_filepath )){
 					echo 'Sample Widgets are imported.';
-					update_option('tallythemesetup_is_widget', 'yes');
+					update_option(TALLYTHEMESETUP_IS_WIDGET, 'yes');
 				}
 			}else{
 				echo 'No widgets.wie file found in the theme';	
 			}
 		}
 	}elseif(($_REQUEST['target'] == 'widget_import') && ($disable_wie_import == true)){
-		update_option('tallythemesetup_is_widget', 'yes');
+		update_option(TALLYTHEMESETUP_IS_WIDGET, 'yes');
 	}
 	
 	
@@ -156,23 +167,23 @@ function tallythemesetup_demo_import(){
 			if((update_option( 'page_on_front', $home_page_data->ID) && ( $disable_home_setup == false ) )){
 				update_option( 'show_on_front', 'page' );
 				$text_content .= 'Set home page as Front page. <br>';
-				update_option('tallythemesetup_is_home', 'yes');
+				update_option(TALLYTHEMESETUP_IS_HOME, 'yes');
 			}
 		}
 		if($home_blog_data){
 			if((update_option( 'page_for_posts', $home_blog_data->ID) ) && ( $disable_blog_setup == false )){
 				$text_content .=  '<br>Set Blog page as Post page.';
-				update_option('tallythemesetup_is_blog', 'yes');
+				update_option(TALLYTHEMESETUP_IS_BLOG, 'yes');
 			}
 		}
 		echo $text_content;
 	endif;
 	
 	if($disable_home_setup == true){
-		update_option('tallythemesetup_is_home', 'yes');
+		update_option(TALLYTHEMESETUP_IS_HOME, 'yes');
 	}
 	if($disable_blog_setup == true){
-		update_option('tallythemesetup_is_blog', 'yes');
+		update_option(TALLYTHEMESETUP_IS_BLOG, 'yes');
 	}
 	
 	
@@ -180,24 +191,27 @@ function tallythemesetup_demo_import(){
 		4. Setup the menu
 	------------------------------------------------------------------*/
 	if(($_REQUEST['target'] == 'setup_menu') && ($disable_menu_setup == false)){
+		
+		$selected_menu_name = apply_filters('tallythemesetup_menu_slug', 'primary');
+		
 		$menu_term_id = '';
 		$get_all_menu = get_terms( 'nav_menu', array( 'hide_empty' => true ) );
 		if(!empty($get_all_menu) && ! is_wp_error( $get_all_menu )){
 			foreach($get_all_menu as $the_menu){
-				if($the_menu->slug == apply_filters('tallythemesetup_menu_slug', 'primary')){
+				if($the_menu->slug == $selected_menu_name ){
 					$menu_term_id = $the_menu->term_id;
 				}
 			}
 		}
 		$locations = get_theme_mod('nav_menu_locations');
-		$locations['primary'] = $menu_term_id;  //$foo is term_id of menu
+		$locations[$selected_menu_name] = $menu_term_id;  //$foo is term_id of menu
 		set_theme_mod('nav_menu_locations', $locations);
-		if( $locations['primary'] == $menu_term_id ){
+		if( $locations[$selected_menu_name] == $menu_term_id ){
 			echo 'Set primary menu as site menu.';
-			update_option('tallythemesetup_is_menu', 'yes');
+			update_option(TALLYTHEMESETUP_IS_MENU, 'yes');
 		}
 	}elseif(($_REQUEST['target'] == 'setup_menu') && ($disable_menu_setup == true)){
-		update_option('tallythemesetup_is_menu', 'yes');
+		update_option(TALLYTHEMESETUP_IS_MENU, 'yes');
 	}
 	
 	/*
@@ -214,13 +228,13 @@ function tallythemesetup_demo_import(){
 					}
 				}
 			}
-			update_option('tallythemesetup_is_builder', 'yes');
+			update_option(TALLYTHEMESETUP_IS_BUILDER, 'yes');
 			echo 'Builder content imported';
 		}else{
 			echo '<strong>Could not import builder content.</strong> Please Install the Builder Plugin';	
 		}
 	}elseif(($_REQUEST['target'] == 'builder_import') && ($disable_builder_import == true)){
-		update_option('tallythemesetup_is_builder', 'yes');
+		update_option(TALLYTHEMESETUP_IS_BUILDER, 'yes');
 	}
 	
 	if($_REQUEST['target'] == 'update_option'):
@@ -240,12 +254,12 @@ function tallythemesetup_importer_admin_page_html(){
 	?>
     <div class="wrap tallythemesetup_page">
     	<h1>Import Sample Data</h1>
-		<?php if((get_option('tallythemesetup_is_xml') == 'yes') 
-		&& (get_option('tallythemesetup_is_widget') == 'yes') 
-		&& (get_option('tallythemesetup_is_menu') == 'yes') 
-		&& (get_option('tallythemesetup_is_home') == 'yes')
-		&& (get_option('tallythemesetup_is_blog') == 'yes')
-		&& (get_option('tallythemesetup_is_builder') == 'yes')): ?>
+		<?php if((get_option(TALLYTHEMESETUP_IS_XML) == 'yes') 
+		&& (get_option(TALLYTHEMESETUP_IS_WIDGET) == 'yes') 
+		&& (get_option(TALLYTHEMESETUP_IS_MENU) == 'yes') 
+		&& (get_option(TALLYTHEMESETUP_IS_HOME) == 'yes')
+		&& (get_option(TALLYTHEMESETUP_IS_BLOG) == 'yes')
+		&& (get_option(TALLYTHEMESETUP_IS_BUILDER) == 'yes')): ?>
         	
         	<strong style="color:#F00; font-size:16px; line-height:1.5;">Looks like you already import the sample data. So you don't need to do it again. If you import again duplicate content will be generated</strong>
         <?php endif; ?>

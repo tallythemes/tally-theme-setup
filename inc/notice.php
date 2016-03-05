@@ -17,17 +17,17 @@ function tallythemesetup_admin_notice() {
 	}
 	
 	$all_data_imported = false;
-	if((get_option('tallythemesetup_is_xml') == 'yes') 
-		&& (get_option('tallythemesetup_is_widget') == 'yes') 
-		&& (get_option('tallythemesetup_is_menu') == 'yes') 
-		&& (get_option('tallythemesetup_is_home') == 'yes')
-		&& (get_option('tallythemesetup_is_blog') == 'yes')
-		&& (get_option('tallythemesetup_is_builder') == 'yes')){
+	if((get_option(TALLYTHEMESETUP_IS_XML) == 'yes') 
+		&& (get_option(TALLYTHEMESETUP_IS_WIDGET) == 'yes') 
+		&& (get_option(TALLYTHEMESETUP_IS_MENU) == 'yes') 
+		&& (get_option(TALLYTHEMESETUP_IS_HOME) == 'yes')
+		&& (get_option(TALLYTHEMESETUP_IS_BLOG) == 'yes')
+		&& (get_option(TALLYTHEMESETUP_IS_BUILDER) == 'yes')){
 			$all_data_imported = true;
 	}
 			
 	$user_ignored_notice = false;
-	if( get_user_meta($user_id, 'tallythemesetup_ignore_notice') ) {
+	if( get_user_meta($user_id, TALLYTHEMESETUP_IGNOR_NOTICE) ) {
 		$user_ignored_notice = true;
 	}
 	
@@ -83,7 +83,7 @@ function tallythemesetup_admin_notice_dismiss() {
 	global $current_user;
 	$user_id = $current_user->ID;
 	/* If user clicks to ignore the notice, add that to their user meta */
-	if ( isset($_GET['tallythemesetup_ignore_notice']) && ('0' == $_GET['tallythemesetup_ignore_notice']) ) {
-		add_user_meta($user_id, 'tallythemesetup_ignore_notice', 'true', true);
+	if ( isset($_GET[TALLYTHEMESETUP_IGNOR_NOTICE]) && ('0' == $_GET[TALLYTHEMESETUP_IGNOR_NOTICE]) ) {
+		add_user_meta($user_id, TALLYTHEMESETUP_IGNOR_NOTICE, 'true', true);
     }
 }
