@@ -6,7 +6,7 @@
 Plugin Name: Tally Theme Setup
 Plugin URI: http://tallythemes.com/
 Description: Import demo content for Tally Themes
-Version: 1.4
+Version: 1.5
 Author: TallyThemes
 Author URI: http://tallythemes.com/
 License: GPLv2 or later
@@ -42,14 +42,16 @@ define( 'TALLYTHEMESETUP__PLUGIN_DRI', plugin_dir_path( __FILE__ ) );
 
 $theme_data = wp_get_theme();
 
-define( 'TALLYTHEMESETUP_IS_XML', 'tallythemesetup_is_xml_'.$theme_data->get('Template ') );
-define( 'TALLYTHEMESETUP_IS_WIDGET', 'tallythemesetup_is_widget_'.$theme_data->get('Template ') );
-define( 'TALLYTHEMESETUP_IS_MENU', 'tallythemesetup_is_menu_'.$theme_data->get('Template ') );
-define( 'TALLYTHEMESETUP_IS_HOME', 'tallythemesetup_is_home_'.$theme_data->get('Template ') );
-define( 'TALLYTHEMESETUP_IS_BLOG', 'tallythemesetup_is_blog_'.$theme_data->get('Template ') );
-define( 'TALLYTHEMESETUP_IS_BUILDER', 'tallythemesetup_is_builder_'.$theme_data->get('Template ') );
+$theme_slug = strtolower(str_replace(" ", "_", $theme_data->get('Name')));
 
-define( 'TALLYTHEMESETUP_IGNOR_NOTICE', 'tallythemesetup_ignore_notice_'.$theme_data->get('Template ') );
+define( 'TALLYTHEMESETUP_IS_XML', 'tallythemesetup_is_xml_'.$theme_slug );
+define( 'TALLYTHEMESETUP_IS_WIDGET', 'tallythemesetup_is_widget_'.$theme_slug );
+define( 'TALLYTHEMESETUP_IS_MENU', 'tallythemesetup_is_menu_'.$theme_slug );
+define( 'TALLYTHEMESETUP_IS_HOME', 'tallythemesetup_is_home_'.$theme_slug );
+define( 'TALLYTHEMESETUP_IS_BLOG', 'tallythemesetup_is_blog_'.$theme_slug );
+define( 'TALLYTHEMESETUP_IS_BUILDER', 'tallythemesetup_is_builder_'.$theme_slug );
+
+define( 'TALLYTHEMESETUP_IGNOR_NOTICE', 'tallythemesetup_ignore_notice_'.$theme_slug );
 
 include('inc/script-loader.php');
 include('inc/notice.php');
@@ -193,6 +195,7 @@ function tallythemesetup_demo_import(){
 	if(($_REQUEST['target'] == 'setup_menu') && ($disable_menu_setup == false)){
 		
 		$selected_menu_name = apply_filters('tallythemesetup_menu_slug', 'primary');
+		$selected_menu_location = apply_filters('tallythemesetup_menu_location', 'primary');
 		
 		$menu_term_id = '';
 		$get_all_menu = get_terms( 'nav_menu', array( 'hide_empty' => true ) );
@@ -204,9 +207,9 @@ function tallythemesetup_demo_import(){
 			}
 		}
 		$locations = get_theme_mod('nav_menu_locations');
-		$locations[$selected_menu_name] = $menu_term_id;  //$foo is term_id of menu
+		$locations[$selected_menu_location] = $menu_term_id; //$foo is term_id of menu
 		set_theme_mod('nav_menu_locations', $locations);
-		if( $locations[$selected_menu_name] == $menu_term_id ){
+		if( $locations[$selected_menu_location] == $menu_term_id ){
 			echo 'Set primary menu as site menu.';
 			update_option(TALLYTHEMESETUP_IS_MENU, 'yes');
 		}
