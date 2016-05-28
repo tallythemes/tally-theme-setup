@@ -2,8 +2,8 @@
 Contributors: tallythemes, sazzadh
 Tags: tallythemes, impoter, dample data, sample data impoter
 Requires at least: 4.4
-Tested up to: 4.4
-Stable tag: 1.5
+Tested up to: 4.5
+Stable tag: 1.6
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -38,6 +38,13 @@ It is not recommended for live site. It is recommended on a fresh wordpress inst
 
 
 == Changelog ==
+
+= 1.6 =
+- Added demo-sample folder
+- Improve the menu handeling
+- Improve reading settings handeling
+- Improve service desible handeling
+
 
 = 1.5 =
 - Improve the Admin notice

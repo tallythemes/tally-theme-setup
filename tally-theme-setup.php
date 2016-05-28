@@ -6,7 +6,7 @@
 Plugin Name: Tally Theme Setup
 Plugin URI: http://tallythemes.com/
 Description: Import demo content for Tally Themes
-Version: 1.5
+Version: 1.6
 Author: TallyThemes
 Author URI: http://tallythemes.com/
 License: GPLv2 or later
@@ -44,6 +44,11 @@ $theme_data = wp_get_theme();
 
 $theme_slug = strtolower(str_replace(" ", "_", $theme_data->get('Name')));
 
+$theme_slug_file = get_template_directory() ."/inc/demo/theme-slug.php";
+if(file_exists($theme_slug_file)){
+	$theme_slug =  include($theme_slug_file);	
+}
+
 define( 'TALLYTHEMESETUP_IS_XML', 'tallythemesetup_is_xml_'.$theme_slug );
 define( 'TALLYTHEMESETUP_IS_WIDGET', 'tallythemesetup_is_widget_'.$theme_slug );
 define( 'TALLYTHEMESETUP_IS_MENU', 'tallythemesetup_is_menu_'.$theme_slug );
@@ -66,7 +71,14 @@ function tallythemesetup_demo_import(){
 	$disable_home_setup = apply_filters('tallythemesetup_disable_home_setup', false);
 	$disable_blog_setup = apply_filters('tallythemesetup_disable_blog_setup', false);
 	$disable_builder_import = apply_filters('tallythemesetup_disable_builder_import', false);
-
+	
+	
+	$disable_config_file = get_template_directory() ."/inc/demo/disable-config.php";
+	if(file_exists($disable_config_file)){
+		include($disable_config_file);
+	}
+	
+	
  	/*
 		1. XML importer
 	------------------------------------------------------------------*/
@@ -106,6 +118,7 @@ function tallythemesetup_demo_import(){
 		
 				if($WP_Import->check()){
 					echo 'Sample contents are imported.';
+					//echo $log;
 					update_option(TALLYTHEMESETUP_IS_XML, 'yes');
 				}
 			}else{
@@ -162,8 +175,18 @@ function tallythemesetup_demo_import(){
 		3. Setup Home page as front page
 	------------------------------------------------------------------*/
 	if($_REQUEST['target'] == 'setup_home'):
-		$home_page_data = get_page_by_title( apply_filters('tallythemesetup_home_title', 'Home') );
-		$home_blog_data = get_page_by_title( apply_filters('tallythemesetup_blog_title', 'Blog') );
+	
+		$home_page_title = apply_filters('tallythemesetup_home_title', 'Home');
+		$blog_page_title = apply_filters('tallythemesetup_blog_title', 'Blog');
+	
+		$reading_config_file = get_template_directory() ."/inc/demo/reading-config.php";
+		if(file_exists($reading_config_file)){
+			include($reading_config_file);
+		}
+		
+		$home_page_data = get_page_by_title( $home_page_title );
+		$home_blog_data = get_page_by_title( $blog_page_title );
+		
 		$text_content = '';
 		if($home_page_data){
 			if((update_option( 'page_on_front', $home_page_data->ID) && ( $disable_home_setup == false ) )){
@@ -194,25 +217,33 @@ function tallythemesetup_demo_import(){
 	------------------------------------------------------------------*/
 	if(($_REQUEST['target'] == 'setup_menu') && ($disable_menu_setup == false)){
 		
-		$selected_menu_name = apply_filters('tallythemesetup_menu_slug', 'primary');
-		$selected_menu_location = apply_filters('tallythemesetup_menu_location', 'primary');
-		
-		$menu_term_id = '';
-		$get_all_menu = get_terms( 'nav_menu', array( 'hide_empty' => true ) );
-		if(!empty($get_all_menu) && ! is_wp_error( $get_all_menu )){
-			foreach($get_all_menu as $the_menu){
-				if($the_menu->slug == $selected_menu_name ){
-					$menu_term_id = $the_menu->term_id;
+		$menu_config_file = get_template_directory() ."/inc/demo/menu-config.php";
+		if(file_exists($menu_config_file)){
+			include($menu_config_file);
+			echo 'Setting Up WordPress Menu';
+			update_option(TALLYTHEMESETUP_IS_MENU, 'yes');	
+		}else{
+			$selected_menu_name = apply_filters('tallythemesetup_menu_slug', 'primary');
+			$selected_menu_location = apply_filters('tallythemesetup_menu_location', 'primary');
+			
+			$menu_term_id = '';
+			$get_all_menu = get_terms( 'nav_menu', array( 'hide_empty' => true ) );
+			if(!empty($get_all_menu) && ! is_wp_error( $get_all_menu )){
+				foreach($get_all_menu as $the_menu){
+					if($the_menu->slug == $selected_menu_name ){
+						$menu_term_id = $the_menu->term_id;
+					}
 				}
 			}
+			$locations = get_theme_mod('nav_menu_locations');
+			$locations[$selected_menu_location] = $menu_term_id; //$foo is term_id of menu
+			set_theme_mod('nav_menu_locations', $locations);
+			if( $locations[$selected_menu_location] == $menu_term_id ){
+				echo 'Set primary menu as site menu.';
+				update_option(TALLYTHEMESETUP_IS_MENU, 'yes');
+			}
 		}
-		$locations = get_theme_mod('nav_menu_locations');
-		$locations[$selected_menu_location] = $menu_term_id; //$foo is term_id of menu
-		set_theme_mod('nav_menu_locations', $locations);
-		if( $locations[$selected_menu_location] == $menu_term_id ){
-			echo 'Set primary menu as site menu.';
-			update_option(TALLYTHEMESETUP_IS_MENU, 'yes');
-		}
+		
 	}elseif(($_REQUEST['target'] == 'setup_menu') && ($disable_menu_setup == true)){
 		update_option(TALLYTHEMESETUP_IS_MENU, 'yes');
 	}

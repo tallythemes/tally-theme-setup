@@ -7,6 +7,12 @@ function tallythemesetup_admin_notice() {
 	$theme_demo_url = (defined('TALLYTHEME_DEMO_URL') ? TALLYTHEME_DEMO_URL : '');
 	
 	$plugins_lists = apply_filters('tallythemesetup_plugin_list', '');
+	
+	$plugin_lists_config_file = get_template_directory() ."/inc/demo/plugin-list-config.php";
+	if(file_exists($plugin_lists_config_file)){
+		$plugins_lists =  include($plugin_lists_config_file);	
+	}
+	
 	$installed_plugin_count = 0;
 	if(is_array($plugins_lists)){
 		foreach($plugins_lists as $plugins_list){
@@ -27,10 +33,9 @@ function tallythemesetup_admin_notice() {
 	}
 			
 	$user_ignored_notice = false;
-	if( get_user_meta($user_id, TALLYTHEMESETUP_IGNOR_NOTICE) ) {
+	if( get_user_meta($user_id, TALLYTHEMESETUP_IGNOR_NOTICE, 'yes') == 'yes' ) {
 		$user_ignored_notice = true;
-	}
-	
+	}	
 	
 	$is_current_page_impoter_page = false;
 	if(isset($_GET['page'])){
@@ -71,7 +76,7 @@ function tallythemesetup_admin_notice() {
                 	<a class="button button-primary button-hero" href="<?php echo admin_url('themes.php?page=tgmpa-install-plugins'); ?>">Install Recommended Plugins</a> 
                 <?php endif; ?>
             <?php endif; ?>   
-			<a class="n-dismiss" href="<?php echo admin_url('themes.php?page=tallythemesetup-demo-importer&amp;tallythemesetup_ignore_notice=0'); ?>">Dismiss</a>
+			<a class="n-dismiss" href="<?php echo admin_url('themes.php?page=tallythemesetup-demo-importer&amp;tallythemesetup_ignore_notice=yes'); ?>">Dismiss</a>
 		</div>
 		<?php
 		}
@@ -83,7 +88,15 @@ function tallythemesetup_admin_notice_dismiss() {
 	global $current_user;
 	$user_id = $current_user->ID;
 	/* If user clicks to ignore the notice, add that to their user meta */
-	if ( isset($_GET[TALLYTHEMESETUP_IGNOR_NOTICE]) && ('0' == $_GET[TALLYTHEMESETUP_IGNOR_NOTICE]) ) {
-		add_user_meta($user_id, TALLYTHEMESETUP_IGNOR_NOTICE, 'true', true);
+	
+	if (isset($_GET['tallythemesetup_ignore_notice'])){
+		
+		if('yes' == $_GET['tallythemesetup_ignore_notice']){
+			add_user_meta($user_id, TALLYTHEMESETUP_IGNOR_NOTICE, 'yes');
+			update_user_meta($user_id, TALLYTHEMESETUP_IGNOR_NOTICE, 'yes');
+		}elseif('no' == $_GET['tallythemesetup_ignore_notice']){
+			update_user_meta($user_id, TALLYTHEMESETUP_IGNOR_NOTICE, 'no');
+		}
+		
     }
 }

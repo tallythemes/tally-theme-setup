@@ -5,7 +5,7 @@
  * Original code from {@link https://wordpress.org/plugins/wordpress-importer/ WordPress Importer}
  *
  */
-
+ 
 if ( ! defined( 'WP_LOAD_IMPORTERS' ) )
 	return;
 
@@ -21,12 +21,7 @@ if ( ! class_exists( 'WP_Importer' ) ) {
 		require $class_wp_importer;
 }
 
-/**
- * WordPress Importer class for managing the import process of a WXR file
- *
- * @package WordPress
- * @subpackage Importer
- */
+
 if ( class_exists( 'WP_Importer' ) ) {
 class tallythemesetup_WP_Import extends WP_Importer {
 	var $max_wxr_version = 1.2; // max. supported WXR version
@@ -59,7 +54,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	function tallythemesetup_WP_Import() { /* nothing */ }
 
 	/**
-	 * Registered callback function for the WordPress Importer
+	 * Registered callback function
 	 *
 	 * Manages the three separate stages of the WXR import process
 	 */
@@ -1100,7 +1095,7 @@ class tallythemesetup_WP_Import extends WP_Importer {
 	 * Added to http_request_timeout filter to force timeout at 60 seconds during import
 	 * @return int 60
 	 */
-	function bump_request_timeout() {
+	function bump_request_timeout($val) {
 		return 60;
 	}
 
@@ -1111,8 +1106,6 @@ class tallythemesetup_WP_Import extends WP_Importer {
 }
 
 } // End of main class
-
-
 
 
 class tallythemesetup_import extends tallythemesetup_WP_Import
