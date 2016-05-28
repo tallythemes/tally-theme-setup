@@ -1,6 +1,6 @@
 === Tally Theme Setup ===
 Contributors: tallythemes, sazzadh
-Tags: tallythemes, impoter, dample data, sample data impoter
+Tags: tallythemes, importer, sample data, sample data importer
 Requires at least: 4.4
 Tested up to: 4.5
 Stable tag: 1.6
@@ -13,7 +13,7 @@ Import demo content for Tally Themes
 
 Want to make our theme look like our theme demo. This plugin will help you to make your site look like the original theme demo easily.
 
-We have used some souce code of [WorddPress Impoter](https://wordpress.org/plugins/wordpress-importer/) and [Widget Importer & Exporter](https://wordpress.org/plugins/wordpress-importer/)
+We have used some source code of [WorddPress Impoter](https://wordpress.org/plugins/wordpress-importer/) and [Widget Importer & Exporter](https://wordpress.org/plugins/wordpress-importer/)
 
 == Installation ==
 
@@ -34,16 +34,16 @@ No, It will only work on supported theme of TallyThemes.com
 After installing our theme it will not look like the theme demo. To make the new site look like the demo you will need this plugin.
 
 = Can I import sample data on a live site? =
-It is not recommended for live site. It is recommended on a fresh wordpress installation. So if your current wordpress installation already have content( Images, Page's, Posts, etc. ) you should not import sample data.
+It is not recommended for live site. It is recommended on a fresh wordpress installation. So if your current wordpress installation already have content ( Images, Page's, Posts, etc. ) you should not import sample data.
 
 
-== Changelog ==
+== Change log ==
 
 = 1.6 =
 - Added demo-sample folder
-- Improve the menu handeling
-- Improve reading settings handeling
-- Improve service desible handeling
+- Improve the menu handling
+- Improve reading settings handling
+- Improve service disable handling
 
 
 = 1.5 =
