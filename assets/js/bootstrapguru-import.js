@@ -28,7 +28,7 @@
         };
 		var data6 = {
 			'action': 'tallythemesetup_demo_import',
-			'target': 'update_option'
+			'target': 'revolution_slider_import'
         };
 
       	// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
@@ -60,6 +60,7 @@
 				  $('.tallythemesetup_import_message5').html('<div class="import_message_success">'+ response +'</div>');
 			 });
 		}).then( function( response ) {
+			$( ".tallythemesetup_import_message6" ).css( "display", 'block' );
 			 $.post(ajaxurl, data6, function(response) {
 				  $('.tallythemesetup_import_message6').html('<div class="import_message_success">'+ response +'</div>');
 			 });

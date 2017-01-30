@@ -55,11 +55,23 @@ define( 'TALLYTHEMESETUP_IS_MENU', 'tallythemesetup_is_menu_'.$theme_slug );
 define( 'TALLYTHEMESETUP_IS_HOME', 'tallythemesetup_is_home_'.$theme_slug );
 define( 'TALLYTHEMESETUP_IS_BLOG', 'tallythemesetup_is_blog_'.$theme_slug );
 define( 'TALLYTHEMESETUP_IS_BUILDER', 'tallythemesetup_is_builder_'.$theme_slug );
+define( 'TALLYTHEMESETUP_IS_REVOLUTION', 'tallythemesetup_is_revolution_'.$theme_slug );
 
 define( 'TALLYTHEMESETUP_IGNOR_NOTICE', 'tallythemesetup_ignore_notice_'.$theme_slug );
 
 include('inc/script-loader.php');
 include('inc/notice.php');
+
+function tallythemesetup_demo_files_url($file){
+	$child = get_stylesheet_directory() ."/inc/demo/".$file;
+	$theme = get_template_directory() ."/inc/demo/".$file;
+	
+	if(file_exists($child)){
+		return $child;
+	}else{
+		return $theme;
+	}
+}
 
 
 add_action( 'wp_ajax_tallythemesetup_demo_import', 'tallythemesetup_demo_import' );
@@ -72,10 +84,8 @@ function tallythemesetup_demo_import(){
 	$disable_blog_setup = apply_filters('tallythemesetup_disable_blog_setup', false);
 	$disable_builder_import = apply_filters('tallythemesetup_disable_builder_import', false);
 	
-	
-	$disable_config_file = get_template_directory() ."/inc/demo/disable-config.php";
-	if(file_exists($disable_config_file)){
-		include($disable_config_file);
+	if(file_exists(tallythemesetup_demo_files_url('disable-config.php'))){
+		include(tallythemesetup_demo_files_url('disable-config.php'));
 	}
 	
 	
@@ -90,19 +100,10 @@ function tallythemesetup_demo_import(){
 
 		if ( class_exists('tallythemesetup_import') ){ 
 			
-			$content_xml_child = get_stylesheet_directory() ."/inc/demo/content.xml";
-			$content_xml_theme = get_template_directory() ."/inc/demo/content.xml";
-			$content_alt_xml_child = get_stylesheet_directory() ."/inc/demo/content-alt.xml";
-			$content_alt_xml_theme = get_template_directory() ."/inc/demo/content-alt.xml";
-			
-			if(file_exists($content_xml_child)){
-				$import_filepath = $content_xml_child;
-			}elseif(file_exists($content_xml_theme)){
-				$import_filepath = $content_xml_theme;
-			}elseif(file_exists($content_alt_xml_child)){
-				$import_filepath = $content_alt_xml_child;
-			}else{
-				$import_filepath = $content_alt_xml_theme;
+			if(file_exists(tallythemesetup_demo_files_url('content.xml'))){
+				$import_filepath = tallythemesetup_demo_files_url('content.xml');
+			}elseif(file_exists(tallythemesetup_demo_files_url('content-alt.xml'))){
+				$import_filepath = tallythemesetup_demo_files_url('content-alt.xml');
 			}
 			
 			if(file_exists($import_filepath)){
@@ -141,20 +142,11 @@ function tallythemesetup_demo_import(){
 		}
 		
 		if(function_exists( 'tallythemesetup_process_widget_data' )){
-			
-			$widget_file_child = get_stylesheet_directory() ."/inc/demo/widgets.wie";
-			$widget_file_theme = get_template_directory() ."/inc/demo/widgets.wie";
-			$widget_alt_file_child = get_stylesheet_directory() ."/inc/demo/widgets-alt.wie";
-			$widget_alt_file_theme = get_template_directory() ."/inc/demo/widgets-alt.wie";
-			
-			if(file_exists($widget_file_child)){
-				$wie_filepath = $widget_file_child;
-			}elseif(file_exists($widget_file_theme)){
-				$wie_filepath = $widget_file_theme;
-			}elseif(file_exists($widget_alt_file_child)){
-				$wie_filepath = $widget_alt_file_child;
+
+			if(file_exists(tallythemesetup_demo_files_url('widgets.wie'))){
+				$wie_filepath = tallythemesetup_demo_files_url('widgets.wie');
 			}else{
-				$wie_filepath = $widget_alt_file_theme;
+				$wie_filepath = tallythemesetup_demo_files_url('widgets-alt.wie');
 			}
 			
 			if(file_exists($wie_filepath)){
@@ -179,9 +171,8 @@ function tallythemesetup_demo_import(){
 		$home_page_title = apply_filters('tallythemesetup_home_title', 'Home');
 		$blog_page_title = apply_filters('tallythemesetup_blog_title', 'Blog');
 	
-		$reading_config_file = get_template_directory() ."/inc/demo/reading-config.php";
-		if(file_exists($reading_config_file)){
-			include($reading_config_file);
+		if(file_exists(tallythemesetup_demo_files_url('reading-config.php'))){
+			include(tallythemesetup_demo_files_url('reading-config.php'));
 		}
 		
 		$home_page_data = get_page_by_title( $home_page_title );
@@ -217,9 +208,8 @@ function tallythemesetup_demo_import(){
 	------------------------------------------------------------------*/
 	if(($_REQUEST['target'] == 'setup_menu') && ($disable_menu_setup == false)){
 		
-		$menu_config_file = get_template_directory() ."/inc/demo/menu-config.php";
-		if(file_exists($menu_config_file)){
-			include($menu_config_file);
+		if(file_exists(tallythemesetup_demo_files_url('menu-config.php'))){
+			include(tallythemesetup_demo_files_url('menu-config.php'));
 			echo 'Setting Up WordPress Menu';
 			update_option(TALLYTHEMESETUP_IS_MENU, 'yes');	
 		}else{
@@ -271,6 +261,27 @@ function tallythemesetup_demo_import(){
 		update_option(TALLYTHEMESETUP_IS_BUILDER, 'yes');
 	}
 	
+	
+	/*
+		6. Import revolution slider
+	------------------------------------------------------------------*/
+	if(($_REQUEST['target'] == 'revolution_slider_import') && ($disable_revolution_slider_import == false)){
+		if(class_exists('RevSlider')){
+			if(file_exists(tallythemesetup_demo_files_url('slider.zip'))){
+				$RevSlider = new RevSlider();
+				$RevSlider->importSliderFromPost(true, true, tallythemesetup_demo_files_url('slider.zip'));  
+				update_option(TALLYTHEMESETUP_IS_REVOLUTION, 'yes');
+				echo 'Slider imported';
+			}else{
+				echo 'No <strong>slider.zip</strong> file found in the theme';	
+			}
+		}else{
+			echo '<strong>Could not import Slider.</strong> Please Install the <strong>revolution slider</strong> Plugin';	
+		}
+	}elseif(($_REQUEST['target'] == 'revolution_slider_import') && ($disable_revolution_slider_import == true)){
+		update_option(TALLYTHEMESETUP_IS_REVOLUTION, 'yes');
+	}
+	
 	if($_REQUEST['target'] == 'update_option'):
 		echo '<p style="font-size:18px; color:#0A9900;">All Done</p>';
 	endif;
@@ -293,7 +304,8 @@ function tallythemesetup_importer_admin_page_html(){
 		&& (get_option(TALLYTHEMESETUP_IS_MENU) == 'yes') 
 		&& (get_option(TALLYTHEMESETUP_IS_HOME) == 'yes')
 		&& (get_option(TALLYTHEMESETUP_IS_BLOG) == 'yes')
-		&& (get_option(TALLYTHEMESETUP_IS_BUILDER) == 'yes')): ?>
+		&& (get_option(TALLYTHEMESETUP_IS_BUILDER) == 'yes')
+		&& (get_option(TALLYTHEMESETUP_IS_REVOLUTION) == 'yes')): ?>
         	
         	<strong style="color:#F00; font-size:16px; line-height:1.5;">Looks like you already import the sample data. So you don't need to do it again. If you import again duplicate content will be generated</strong>
         <?php endif; ?>
@@ -314,8 +326,8 @@ function tallythemesetup_importer_admin_page_html(){
         <div class="tallythemesetup_import_message5" style="margin-bottom:40px; display:none;">
         	<img src="<?php echo TALLYTHEMESETUP__PLUGIN_URL; ?>assets/images/loader.gif" />Importing Builder Content
         </div>
-        <div class="tallythemesetup_import_message6" style="margin-bottom:40px;">
-        	
+        <div class="tallythemesetup_import_message6" style="margin-bottom:40px; display:none;">
+        	<img src="<?php echo TALLYTHEMESETUP__PLUGIN_URL; ?>assets/images/loader.gif" />Importing Slider
         </div>
         <a href="#" class="tallythemesetup_bootstrapguru_import button button-primary button-hero">Import Sample Data</a>
     </div>
