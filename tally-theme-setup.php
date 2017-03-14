@@ -40,13 +40,24 @@ if ( !function_exists( 'add_action' ) ) {
 define( 'TALLYTHEMESETUP__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'TALLYTHEMESETUP__PLUGIN_DRI', plugin_dir_path( __FILE__ ) );
 
+function tallythemesetup_demo_files_url($file){
+	$child = get_stylesheet_directory() ."/inc/demo/".$file;
+	$theme = get_template_directory() ."/inc/demo/".$file;
+	
+	if(file_exists($child)){
+		return $child;
+	}else{
+		return $theme;
+	}
+}
+
 $theme_data = wp_get_theme();
 
 $theme_slug = strtolower(str_replace(" ", "_", $theme_data->get('Name')));
 
-$theme_slug_file = get_template_directory() ."/inc/demo/theme-slug.php";
-if(file_exists($theme_slug_file)){
-	$theme_slug =  include($theme_slug_file);	
+if(file_exists(tallythemesetup_demo_files_url('theme-slug.php'))){
+	$get_theme_slug =  include(tallythemesetup_demo_files_url('theme-slug.php'));
+	$theme_slug = strtolower(str_replace(" ", "_", $get_theme_slug));
 }
 
 define( 'TALLYTHEMESETUP_IS_XML', 'tallythemesetup_is_xml_'.$theme_slug );
@@ -62,18 +73,6 @@ define( 'TALLYTHEMESETUP_IGNOR_NOTICE', 'tallythemesetup_ignore_notice_'.$theme_
 include('inc/script-loader.php');
 include('inc/notice.php');
 
-function tallythemesetup_demo_files_url($file){
-	$child = get_stylesheet_directory() ."/inc/demo/".$file;
-	$theme = get_template_directory() ."/inc/demo/".$file;
-	
-	if(file_exists($child)){
-		return $child;
-	}else{
-		return $theme;
-	}
-}
-
-
 add_action( 'wp_ajax_tallythemesetup_demo_import', 'tallythemesetup_demo_import' );
 function tallythemesetup_demo_import(){
 	
@@ -82,10 +81,13 @@ function tallythemesetup_demo_import(){
 	$disable_menu_setup = apply_filters('tallythemesetup_disable_menu_setup', false);
 	$disable_home_setup = apply_filters('tallythemesetup_disable_home_setup', false);
 	$disable_blog_setup = apply_filters('tallythemesetup_disable_blog_setup', false);
-	$disable_builder_import = apply_filters('tallythemesetup_disable_builder_import', false);
+	$disable_builder_import = apply_filters('tallythemesetup_disable_builder_import', true);
+	$disable_revolution_slider_import = apply_filters('tallythemesetup_disable_revolution_slider_import', false);
 	
 	if(file_exists(tallythemesetup_demo_files_url('disable-config.php'))){
 		include(tallythemesetup_demo_files_url('disable-config.php'));
+	}else{
+		echo 'Theme disable-config.php fine not found.';	
 	}
 	
 	

@@ -61,7 +61,7 @@
 			 });
 		}).then( function( response ) {
 			$( ".tallythemesetup_import_message6" ).css( "display", 'block' );
-			 $.post(ajaxurl, data6, function(response) {
+			$.post(ajaxurl, data6, function(response) {
 				  $('.tallythemesetup_import_message6').html('<div class="import_message_success">'+ response +'</div>');
 			 });
 		});

@@ -8,9 +8,8 @@ function tallythemesetup_admin_notice() {
 	
 	$plugins_lists = apply_filters('tallythemesetup_plugin_list', '');
 	
-	$plugin_lists_config_file = get_template_directory() ."/inc/demo/plugin-list-config.php";
-	if(file_exists($plugin_lists_config_file)){
-		$plugins_lists =  include($plugin_lists_config_file);	
+	if(file_exists(tallythemesetup_demo_files_url('plugin-list-config.php'))){
+		$plugins_lists =  include(tallythemesetup_demo_files_url('plugin-list-config.php'));	
 	}
 	
 	$installed_plugin_count = 0;
@@ -28,7 +27,8 @@ function tallythemesetup_admin_notice() {
 		&& (get_option(TALLYTHEMESETUP_IS_MENU) == 'yes') 
 		&& (get_option(TALLYTHEMESETUP_IS_HOME) == 'yes')
 		&& (get_option(TALLYTHEMESETUP_IS_BLOG) == 'yes')
-		&& (get_option(TALLYTHEMESETUP_IS_BUILDER) == 'yes')){
+		&& (get_option(TALLYTHEMESETUP_IS_BUILDER) == 'yes')
+		&& (get_option(TALLYTHEMESETUP_IS_REVOLUTION) == 'yes')){
 			$all_data_imported = true;
 	}
 			
