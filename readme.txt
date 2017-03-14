@@ -2,8 +2,8 @@
 Contributors: tallythemes, sazzadh
 Tags: tallythemes, importer, sample data, sample data importer
 Requires at least: 4.4
-Tested up to: 4.5
-Stable tag: 1.6
+Tested up to: 4.7.3
+Stable tag: 1.7
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -39,6 +39,9 @@ It is not recommended for live site. It is recommended on a fresh wordpress inst
 
 == Change log ==
 
+= 1.7=
+- Bug fix
+
 = 1.6 =
 - Added demo-sample folder
 - Improve the menu handling
@@ -72,4 +75,4 @@ It is not recommended for live site. It is recommended on a fresh wordpress inst
 - Remove unused code
 
 = 1.0 =
-Initial release.
+- Initial release.
